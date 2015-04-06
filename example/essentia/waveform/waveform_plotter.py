@@ -61,7 +61,6 @@ def find_peaks(audio, min_percentile=80):
     peak_positions, peak_amplitudes = \
         essentia.standard.PeakDetection()(audio)
     print "Found %d peaks" % len(peak_positions)
-    print peak_positions
     return peak_positions
 
 
