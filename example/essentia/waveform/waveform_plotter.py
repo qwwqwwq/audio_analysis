@@ -1,14 +1,14 @@
 __author__ = 'jeffreyquinn'
 import argparse
+
 import essentia
 import essentia.standard
 import numpy
 import pandas
-
 from numpy import arange, linspace, max
 from pylab import plot, savefig, axvline, close
 from audio.algorithms import find_peaks, spectrum, get_metadata, get_duration, resample_audio, moving_average, \
-    get_spline_function, get_gradient, energy_buckets, moving_max
+    get_spline_function, get_gradient, energy_buckets, moving_max, load_partial_audio
 
 
 PLOT_SAMPLE_RATE = 1000
@@ -34,20 +34,6 @@ def write_raw(arr, dest):
     pandas.DataFrame(arr).to_csv(dest)
 
 
-def load_partial_audio(filename, start_time, end_time):
-    """
-    Load a section of audio from a file
-
-    :param filename: String, path of audio file
-    :param start_time: sample start time, in seconds
-    :param end_time: sample end time, in seconds
-    :return: essentia.array
-    """
-    audio = essentia.standard.MonoLoader(filename=filename)()
-    metadata = get_metadata(filename)
-    return audio[(metadata.sampleRate * start_time):(metadata.sampleRate * end_time)]
-
-
 def main():
     args = parse_args()
     metadata = get_metadata(args.filename)
@@ -59,9 +45,6 @@ def main():
         _, audio = energy_buckets(audio, sample_seconds)
         print "Created %d energy points" % len(audio)
         audio = essentia.array(audio)
-        # plot(energies_x, energies_y)
-        # savefig("output/energy_buckets")
-        # close()
 
     if args.amplitude:
         print 'Amplitude'

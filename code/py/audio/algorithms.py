@@ -1,5 +1,6 @@
 __author__ = 'jeffreyquinn'
 import essentia
+import essentia.standard
 import numpy
 import pandas
 
@@ -81,3 +82,17 @@ def energy_buckets(audio, audio_length_seconds, buckets_per_second=20):
 
 def moving_max(audio, window_size=6):
     return pandas.rolling_max(audio, 6)
+
+
+def load_partial_audio(filename, start_time, end_time):
+    """
+    Load a section of audio from a file
+
+    :param filename: String, path of audio file
+    :param start_time: sample start time, in seconds
+    :param end_time: sample end time, in seconds
+    :return: essentia.array
+    """
+    audio = essentia.standard.MonoLoader(filename=filename)()
+    metadata = get_metadata(filename)
+    return audio[(metadata.sampleRate * start_time):(metadata.sampleRate * end_time)]
